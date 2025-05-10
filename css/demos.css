@@ -1,0 +1,140 @@
+/* Demos page specific styles */
+
+/* Card hover effects */
+.video-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Video modal styling */
+.aspect-w-16 {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.aspect-w-16 iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Button disabled state */
+.btn-primary:disabled {
+    background-color: #9CA3AF;
+    cursor: not-allowed;
+}
+
+/* Loading animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Exercise image container */
+.exercise-image {
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.video-card:hover .exercise-image {
+    transform: scale(1.05);
+}
+
+/* Exercise tag styles */
+.exercise-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Enhanced card styling */
+.video-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.video-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0);
+    transition: box-shadow 0.3s ease;
+    pointer-events: none;
+}
+
+.video-card:hover::after {
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5);
+}
+
+/* Video card inner styling */
+.video-card-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.video-card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.video-card-footer {
+    margin-top: auto;
+}
+
+/* Image container position relative for loading overlay */
+.video-card .relative {
+    position: relative;
+    background-color: #f3f4f6;
+    overflow: hidden;
+}
+
+/* Image loading animation */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.video-card .relative::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f3f4f6, #e5e7eb, #f3f4f6);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    z-index: -1;
+}

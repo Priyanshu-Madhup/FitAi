@@ -49,6 +49,7 @@ const config = {
   apiKeys: {
     tomtom: getEnvVariable('TOMTOM_API_KEY', ''),
     serper: getEnvVariable('SERPER_API_KEY', ''),
+    groq: getEnvVariable('GROQ_API_KEY', ''),
     groq: getEnvVariable('GROQ_API_KEY', '')
   },
   

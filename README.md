@@ -7,6 +7,7 @@ FitAi is a comprehensive fitness platform leveraging artificial intelligence to 
 - **Personalized Workout Plans**: Generate custom fitness routines based on goals, experience, and preferences
 - **AI Fitness Assistant**: Chat with our AI to get fitness advice and answers to health questions
 - **Gym & Park Locator**: Find fitness facilities and outdoor workout spaces near you using TomTom Maps
+- **Workout Video Demos**: Upload your workout plan PDF to watch exercise demonstration videos
 - **Mobile-Responsive Design**: Works seamlessly across all devices
 
 ## Deployment
