@@ -49,38 +49,26 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dis
 // File upload event handler
 fileUpload.addEventListener('change', function(event) {
     const file = event.target.files[0];
-    const fileIcon = document.getElementById('file-icon');
-    const fileNameText = fileName.querySelector('span');
     
     if (file) {
         // Check if it's a PDF
         if (file.type !== 'application/pdf') {
-            fileNameText.textContent = 'Please select a PDF file.';
-            fileIcon.classList.add('hidden');
+            fileName.textContent = 'Please select a PDF file.';
             processButton.disabled = true;
             return;
         }
         
         // Check file size (5MB limit)
         if (file.size > 5 * 1024 * 1024) {
-            fileNameText.textContent = 'File is too large. Please select a file under 5MB.';
-            fileIcon.classList.add('hidden');
+            fileName.textContent = 'File is too large. Please select a file under 5MB.';
             processButton.disabled = true;
             return;
         }
         
-        // Show file icon and name
-        fileIcon.classList.remove('hidden');
-        fileNameText.textContent = file.name;
+        fileName.textContent = file.name;
         processButton.disabled = false;
-        
-        // Add success effect to upload area
-        const uploadLabel = document.querySelector('label[for="pdf-upload"]');
-        uploadLabel.classList.add('border-primary');
-        uploadLabel.classList.add('bg-primary/10');
     } else {
-        fileNameText.textContent = '';
-        fileIcon.classList.add('hidden');
+        fileName.textContent = '';
         processButton.disabled = true;
     }
 });
@@ -217,15 +205,6 @@ async function findAndDisplayVideos(exercises) {
     // Clear previous results
     videoCards.innerHTML = '';
     
-    // Add a loading section for better UX
-    const loadingElement = document.createElement('div');
-    loadingElement.className = 'col-span-full flex items-center justify-center py-10';
-    loadingElement.innerHTML = `
-        <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mr-3"></div>
-        <p class="text-gray-600">Finding video demonstrations...</p>
-    `;
-    videoCards.appendChild(loadingElement);
-    
     // Process up to 12 exercises
     const exercisesToProcess = exercises.slice(0, 12);
     
@@ -243,22 +222,14 @@ async function findAndDisplayVideos(exercises) {
     // Wait for all video searches to complete
     const results = await Promise.all(videoPromises);
     
-    // Remove loading element
-    videoCards.innerHTML = '';
-      // Filter out exercises with no video results
+    // Filter out exercises with no video results
     const successfulResults = results.filter(result => result.videoInfo !== null);
     
-    // Store video results globally for later use in modal functions
-    window.allVideoResults = successfulResults;
-    
-    // Display video cards (using async function for better thumbnails)
-    const createCardPromises = successfulResults.map(async result => {
+    // Display video cards
+    successfulResults.forEach(result => {
         const { exercise, videoInfo } = result;
-        await createVideoCard(exercise, videoInfo);
+        createVideoCard(exercise, videoInfo);
     });
-    
-    // Wait for all cards to be created
-    await Promise.all(createCardPromises);
     
     // Show message if no videos were found
     if (successfulResults.length === 0) {
@@ -350,92 +321,20 @@ async function searchYouTubeVideo(exerciseName) {
     }
 }
 
-// Fetch exercise logo/thumbnail from Serper API
-async function fetchExerciseLogo(exercise) {
-    const query = `${exercise} exercise logo icon fitness`;
-    
-    try {
-        const response = await fetch('https://google.serper.dev/search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-API-KEY': SERPER_API_KEY
-            },
-            body: JSON.stringify({
-                q: query,
-                gl: 'us',
-                hl: 'en',
-                num: 5,
-                type: 'images'
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Serper API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // Check if there are image results
-        if (!data.images || data.images.length === 0) {
-            return null;
-        }
-        
-        // Find suitable logo images (prefer transparent or isolated images)
-        const suitableImages = data.images.filter(img => 
-            img.title.toLowerCase().includes('icon') || 
-            img.title.toLowerCase().includes('logo') || 
-            img.title.toLowerCase().includes('transparent') ||
-            img.title.toLowerCase().includes('isolated') ||
-            img.title.toLowerCase().includes('exercise')
-        );
-        
-        // Return the first suitable image or the first image if no suitable ones found
-        return suitableImages.length > 0 ? suitableImages[0].imageUrl : data.images[0].imageUrl;
-    } catch (error) {
-        console.error('Error fetching exercise logo:', error);
-        return null;
-    }
-}
-
 // Create video card element
-async function createVideoCard(exercise, videoInfo) {
-    // Try to get a better logo/thumbnail for the exercise
-    let logoUrl = null;
-    try {
-        logoUrl = await fetchExerciseLogo(exercise);
-    } catch (error) {
-        console.error(`Error fetching logo for ${exercise}:`, error);
-    }
-    
-    // Use the logo if available, otherwise use the video thumbnail
-    const thumbnailUrl = logoUrl || videoInfo.thumbnail;
-    
+function createVideoCard(exercise, videoInfo) {
     const card = document.createElement('div');
-    card.className = 'video-card bg-white rounded-lg shadow-md overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl';
+    card.className = 'video-card bg-white rounded-lg shadow-md overflow-hidden';
     
     card.innerHTML = `
         <div class="video-card-inner">
-            <div class="relative overflow-hidden">
-                <img class="exercise-image w-full object-cover h-48" src="${thumbnailUrl}" alt="${exercise} thumbnail">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-70"></div>
-                <div class="absolute bottom-2 left-2 right-2">
-                    <span class="inline-block px-3 py-1 bg-primary text-white text-xs rounded-full">${exercise}</span>
-                </div>
-            </div>
+            <img class="exercise-image w-full" src="${videoInfo.thumbnail}" alt="${exercise} thumbnail">
             <div class="video-card-body p-4">
                 <h3 class="text-lg font-semibold text-dark mb-2">${exercise}</h3>
-                <p class="text-gray-600 text-sm mb-3">
-                    <span class="flex items-center">
-                        <svg class="w-4 h-4 mr-1 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path>
-                        </svg>
-                        ${videoInfo.channelName}
-                    </span>
-                </p>
+                <p class="text-gray-600 text-sm mb-3">${videoInfo.channelName}</p>
                 <div class="video-card-footer">
-                    <button class="play-video-btn btn-secondary w-full flex items-center justify-center" data-video-id="${videoInfo.videoId}" data-exercise="${exercise}">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <button class="play-video-btn btn-secondary w-full mt-2" data-video-id="${videoInfo.videoId}" data-exercise="${exercise}">
+                        <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -456,42 +355,13 @@ async function createVideoCard(exercise, videoInfo) {
         const exercise = this.dataset.exercise;
         openVideoModal(videoId, exercise);
     });
-    
-    // Also add click event to the image for better UX
-    const thumbnailImage = card.querySelector('.exercise-image');
-    thumbnailImage.addEventListener('click', function() {
-        openVideoModal(videoInfo.videoId, exercise);
-    });
 }
 
 // Open video modal
 function openVideoModal(videoId, exercise) {
-    // Set modal content
-    modalTitle.querySelector('span').textContent = `${exercise} - Demo`;
-    youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
-    
-    // Set channel info if available
-    const channelInfo = document.getElementById('video-channel-info');
-    // Find the video info by videoId
-    const videoInfo = findVideoInfoById(videoId);
-    if (videoInfo && videoInfo.channelName) {
-        channelInfo.textContent = `From: ${videoInfo.channelName}`;
-    } else {
-        channelInfo.textContent = '';
-    }
-    
-    // Set the YouTube link
-    const youtubeLink = document.getElementById('open-youtube-link');
-    youtubeLink.href = `https://www.youtube.com/watch?v=${videoId}`;
-    
-    // Show modal with animation
+    modalTitle.textContent = `${exercise} - Demo`;
+    youtubeIframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     videoModal.classList.remove('hidden');
-    // Use setTimeout to trigger the transitions after the display property is set
-    setTimeout(() => {
-        videoModal.classList.add('opacity-100');
-        document.getElementById('modal-content').classList.add('scale-100');
-        document.getElementById('modal-content').classList.remove('scale-95');
-    }, 10);
     
     // Add event listener to close when clicking outside the modal content
     videoModal.addEventListener('click', function(event) {
@@ -502,33 +372,13 @@ function openVideoModal(videoId, exercise) {
     
     // Add keyboard event listener for Escape key
     document.addEventListener('keydown', closeModalOnEscape);
-    
-    // Prevent body scrolling when modal is open
-    document.body.style.overflow = 'hidden';
-}
-
-// Find video info by videoId
-function findVideoInfoById(videoId) {
-    // Flatten the successful results to get all video infos
-    const allVideos = window.allVideoResults || [];
-    return allVideos.find(result => result.videoInfo && result.videoInfo.videoId === videoId);
 }
 
 // Close video modal
 function closeVideoModal() {
-    // Start animation
-    videoModal.classList.remove('opacity-100');
-    document.getElementById('modal-content').classList.add('scale-95');
-    document.getElementById('modal-content').classList.remove('scale-100');
-    
-    // Wait for animation to complete before hiding
-    setTimeout(() => {
-        youtubeIframe.src = '';
-        videoModal.classList.add('hidden');
-        document.removeEventListener('keydown', closeModalOnEscape);
-        // Re-enable body scrolling
-        document.body.style.overflow = '';
-    }, 300);
+    youtubeIframe.src = '';
+    videoModal.classList.add('hidden');
+    document.removeEventListener('keydown', closeModalOnEscape);
 }
 
 // Close modal when Escape key is pressed
@@ -548,44 +398,6 @@ function showError(message) {
     loadingContainer.classList.add('hidden');
     processButton.disabled = false;
 }
-
-// Add loading state for images
-function addImageLoadingHandler() {
-    document.querySelectorAll('.exercise-image').forEach(img => {
-        // Create a loading overlay
-        const loadingOverlay = document.createElement('div');
-        loadingOverlay.className = 'absolute inset-0 flex items-center justify-center bg-gray-100';
-        loadingOverlay.innerHTML = `
-            <div class="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
-        `;
-        
-        // Insert the overlay before the image
-        img.parentNode.insertBefore(loadingOverlay, img);
-        
-        // Remove overlay when image loads
-        img.onload = function() {
-            loadingOverlay.remove();
-        };
-        
-        // Remove overlay after timeout (in case image fails to load)
-        setTimeout(() => {
-            if (loadingOverlay.parentNode) {
-                loadingOverlay.remove();
-            }
-        }, 5000);
-    });
-}
-
-// Observe video cards container for new elements
-const videoCardsObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        if (mutation.addedNodes.length > 0) {
-            addImageLoadingHandler();
-        }
-    });
-});
-
-videoCardsObserver.observe(videoCards, { childList: true, subtree: true });
 
 // Mobile Menu Toggle
 document.addEventListener('DOMContentLoaded', function() {

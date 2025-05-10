@@ -9,14 +9,14 @@
   
   // Create a global ENV object to store environment variables if not already exists
   window.ENV = window.ENV || {};
-  
-  // For local development, you can manually set variables here
+    // For local development, you can manually set variables here
   // WARNING: Do not commit actual API keys to this file!
   const devVariables = {
     // For development only, use placeholder values
     TOMTOM_API_KEY: "JXPnqva3lZanMKstFTttkppZnHor4IXr",
     SERPER_API_KEY: "67c090a334109db4480037614dbb1c635f29ad83",
-    GROQ_API_KEY: "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"
+    GROQ_API_KEY: "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",
+    YOUTUBE_API_KEY: "" // Add your YouTube API key here for development
   };
   
   // Try to get variables from various sources

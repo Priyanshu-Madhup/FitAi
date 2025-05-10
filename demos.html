@@ -73,41 +73,28 @@
             <div class="text-center mb-10">
                 <h1 class="text-3xl md:text-4xl font-bold text-dark mb-4">Workout Demos</h1>
                 <p class="text-lg text-gray-700">Upload your workout plan PDF to see video demonstrations of the exercises</p>
-            </div>            <!-- Upload Section -->
-            <div class="max-w-xl mx-auto bg-white rounded-lg shadow-lg p-6 mb-10 border border-gray-100">
-                <h2 class="text-xl font-semibold text-dark mb-4 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Upload Your Workout Plan
-                </h2>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6 mb-10">
+                <h2 class="text-xl font-semibold text-dark mb-4">Upload Your Workout Plan</h2>
                 <p class="text-gray-600 mb-4">Upload the PDF generated from our "Generate Plan" feature to see video demonstrations for each exercise.</p>
                 
                 <div class="flex items-center justify-center w-full">
-                    <label for="pdf-upload" class="flex flex-col items-center justify-center w-full h-40 border-2 border-primary/20 border-dashed rounded-lg cursor-pointer bg-primary/5 hover:bg-primary/10 transition-all">
+                    <label for="pdf-upload" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <svg class="w-12 h-12 mb-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                             </svg>
-                            <p class="mb-2 text-sm text-gray-700"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                             <p class="text-xs text-gray-500">PDF only (MAX. 5MB)</p>
                         </div>
                         <input id="pdf-upload" type="file" class="hidden" accept=".pdf" />
                     </label>
                 </div>
-                <div id="file-name" class="mt-2 text-sm text-gray-500 flex items-center">
-                    <svg class="w-4 h-4 mr-1 text-gray-400 hidden" id="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                    </svg>
-                    <span></span>
-                </div>
+                <div id="file-name" class="mt-2 text-sm text-gray-500"></div>
                 <div class="mt-4">
-                    <button id="process-pdf" class="w-full btn-primary flex items-center justify-center" disabled>
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                        </svg>
-                        Process PDF
-                    </button>
+                    <button id="process-pdf" class="w-full btn-primary" disabled>Process PDF</button>
                 </div>
             </div>
             
@@ -129,36 +116,21 @@
                 <div id="video-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Video cards will be added here dynamically -->
                 </div>
-            </div>            <!-- Video Modal -->
-            <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300">
-                <div class="bg-white rounded-lg shadow-2xl p-4 max-w-4xl w-full mx-4 transform scale-95 transition-transform duration-300" id="modal-content">
-                    <div class="flex justify-between items-center mb-4 border-b border-gray-100 pb-3">
-                        <h3 id="modal-title" class="text-xl font-bold text-dark flex items-center">
-                            <svg class="w-6 h-6 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>Exercise Video</span>
-                        </h3>
-                        <button id="close-modal" class="text-gray-500 hover:text-primary transition-colors rounded-full p-1 hover:bg-gray-100">
+            </div>
+
+            <!-- Video Modal -->
+            <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-lg p-4 max-w-4xl w-full mx-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="modal-title" class="text-xl font-bold text-dark">Exercise Video</h3>
+                        <button id="close-modal" class="text-gray-500 hover:text-gray-700">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
                     </div>
-                    <div id="video-container" class="aspect-w-16 aspect-h-9 rounded-md overflow-hidden border border-gray-200 shadow-inner">
+                    <div id="video-container" class="aspect-w-16 aspect-h-9">
                         <iframe id="youtube-iframe" class="w-full h-96" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div class="mt-4 flex justify-between items-center">
-                        <div class="text-gray-600 text-sm">
-                            <span id="video-channel-info"></span>
-                        </div>
-                        <a href="#" id="open-youtube-link" target="_blank" class="text-primary text-sm hover:underline flex items-center">
-                            Open on YouTube
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </a>
                     </div>
                 </div>
             </div>
